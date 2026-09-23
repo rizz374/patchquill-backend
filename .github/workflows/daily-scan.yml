@@ -1,35 +1,17 @@
 name: Patchquill daily scan
-
-on:
-  schedule:
-    - cron: "0 2 * * *"
-  workflow_dispatch: {}
-
+on: workflow_dispatch
 jobs:
   scan:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: backend
-
     steps:
-      - name: Check out repo
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - run: echo "it works"
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-
-      - name: Run scan for every tracked business
-        run: python main.py scan-all
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-
-      - name: Print open issues (shows up in the run log)
-        run: python main.py issues --status open
+      - run: pip install -r requirements.txt
+        working-directory: backend
+      - run: python main.py scan-all
+        working-directory: backend
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
