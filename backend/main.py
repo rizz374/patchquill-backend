@@ -35,7 +35,7 @@ def cmd_add_business(args):
     )
     print(f"Added business #{result['id']}: {args.name} ({args.url})")
     print(f"\n  Private link for this customer (share ONLY with them):")
-        print(f"  https://patchquill-onda.vercel.app/issues/{result['slug']}\n")
+    print(f"  https://patchquill-onda.vercel.app/issues/{result['slug']}\n")
     if not (args.phone or args.hours or args.address):
         print("  Tip: pass --phone/--hours/--address to also store the "
               "source of truth, so drift can be caught even before the page changes.")
