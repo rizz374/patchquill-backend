@@ -1,0 +1,47 @@
+name: Add business
+
+on:
+  workflow_dispatch:
+    inputs:
+      business_name:
+        description: "Business name"
+        required: true
+      business_url:
+        description: "Business public URL"
+        required: true
+      phone:
+        description: "Correct phone number (optional)"
+        required: false
+      hours:
+        description: "Correct hours (optional)"
+        required: false
+      address:
+        description: "Correct address (optional)"
+        required: false
+
+jobs:
+  add:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: Add the business
+        run: |
+          ARGS=("$BIZ_NAME" "$BIZ_URL")
+          if [ -n "$PHONE" ]; then ARGS+=(--phone "$PHONE"); fi
+          if [ -n "$HOURS" ]; then ARGS+=(--hours "$HOURS"); fi
+          if [ -n "$ADDRESS" ]; then ARGS+=(--address "$ADDRESS"); fi
+          python main.py add-business "${ARGS[@]}"
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          BIZ_NAME: ${{ github.event.inputs.business_name }}
+          BIZ_URL: ${{ github.event.inputs.business_url }}
+          PHONE: ${{ github.event.inputs.phone }}
+          HOURS: ${{ github.event.inputs.hours }}
+          ADDRESS: ${{ github.event.inputs.address }}
