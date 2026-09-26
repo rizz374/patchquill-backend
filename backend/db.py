@@ -58,6 +58,15 @@ CREATE TABLE IF NOT EXISTS issues (
     severity TEXT NOT NULL DEFAULT 'normal',
     kind TEXT NOT NULL DEFAULT 'change'
 );
+
+-- Aggregate-only visit counter per business, no per-visitor data at all -
+-- just a number that resets every week. visit_week_start tracks which
+-- ISO week (Monday-start) the count belongs to; the website's tracking
+-- endpoint resets the count to 1 instead of incrementing whenever it sees
+-- a new week has started, so "resets every Sunday night" happens for
+-- free without a separate cron job.
+ALTER TABLE businesses ADD COLUMN IF NOT EXISTS visit_count INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE businesses ADD COLUMN IF NOT EXISTS visit_week_start DATE;
 """
 
 
